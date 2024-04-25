@@ -1,0 +1,203 @@
+scalar File
+
+# enum CacheControlScope {
+#   PUBLIC
+#   PRIVATE
+# }
+
+# directive @cacheControl(
+#   maxAge: Int
+#   scope: CacheControlScope
+#   inheritMaxAge: Boolean
+# ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+# type User @cacheControl(scope: PRIVATE) {
+type User {
+  id: ID!
+  email: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  posts: [Post!]!
+}
+
+type UserListResult {
+  results: [User!]!
+  pageInfo: CursorPageInfo!
+}
+
+
+input CreateUserInput {
+  email: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+}
+
+input UpdateUserInput {
+  id: ID
+  email: String
+  password: String
+  firstName: String
+  lastName: String
+}
+
+type Post {
+  id: ID!
+  title: String!
+  description: String!
+  published: Boolean!
+  user: User!
+  category: Category
+  comments: [Comment!]!
+}
+
+type PostListResult {
+  results: [Post!]!
+  pageInfo: OffsetPageInfo!
+}
+
+input CreatePostInput {
+  title: String!
+  description: String!
+  published: Boolean!
+  userId: ID!
+}
+
+input UpdatePostInput {
+  id: ID
+  title: String
+  description: String
+  published: Boolean
+  userId: ID
+}
+
+type Category {
+  id: ID!
+  name: String!
+  posts: [Post!]!
+}
+
+type CategoryListResult {
+  results: [Category!]!
+  pageInfo: CursorPageInfo!
+}
+
+input CreateCategoryInput {
+  name: String!
+}
+
+input UpdateCategoryInput {
+  id: ID
+  name: String
+}
+
+type Comment {
+  id: ID!
+  body: String!
+  postId: ID!
+  post: Post!
+}
+
+type CommentListResult {
+  results: [Comment!]!
+  pageInfo: OffsetPageInfo!
+}
+
+input CreateCommentInput {
+  body: String!
+  postId: ID!
+}
+
+input UpdateCommentInput {
+  id: ID
+  body: String
+  postId: ID
+}
+
+# pagination
+type CursorPageInfo {
+  endCursor: ID
+  hasNextPage: Boolean!
+}
+
+type OffsetPageInfo {
+  page: Int!
+  pageSize: Int!
+  totalItem: Int!
+  totalPage: Int!
+}
+
+type LoginResult {
+  accessToken: String!
+}
+
+enum Order {
+  asc
+  desc
+}
+
+input CursorPaginationInput {
+  take: Int, 
+  cursor: ID, 
+  sortField: String, 
+  sortOrder: Order 
+}
+
+input OffsetPaginationInput {
+  page: Int!
+  pageSize: Int!
+  sortField: String
+  sortOrder: Order 
+}
+
+type FileResult {
+  path: String
+  success: Boolean!
+  message: String!
+}
+
+type Query {
+  users(query: CursorPaginationInput): UserListResult!
+  user(id: ID!): User
+
+  posts(query: OffsetPaginationInput!): PostListResult!
+  post(id: ID!): Post
+
+  categories(query: CursorPaginationInput!): CategoryListResult!  # cursor pagination
+  category(id: ID!): Category
+
+  comments(query: OffsetPaginationInput!): CommentListResult!
+  comment(id: ID!): Comment
+
+  # me: User! @cacheControl(scope: PRIVATE)
+  me: User!
+
+  slow(time: Int): String
+}
+
+
+type Mutation {
+  login(email: String!, password: String!): LoginResult!
+
+  createUser(data: CreateUserInput): User
+  updateUser(id: ID!, data: UpdateUserInput): User
+  deleteUser(id: ID!): User
+
+  createPost(data: CreatePostInput): Post
+  updatePost(id: ID!, data: UpdatePostInput): Post
+  deletePost(id: ID!): Post
+
+
+  createCategory(data: CreateCategoryInput): Category
+  updateCategory(id: ID!, data: UpdateCategoryInput): Category
+  deleteCategory(id: ID!): Category
+
+  createComment(data: CreateCommentInput): Comment
+  updateComment(id: ID!, data: UpdateCommentInput): Comment
+  deleteComment(id: ID!): Comment
+
+  uploadFile(file: File!): FileResult!
+}
+
+

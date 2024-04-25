@@ -1,0 +1,40 @@
+{
+  "name": "graphql-yoga",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
+    "start": "ts-node src/main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:reset": "yarn prisma migrate reset",
+    "db:seed": "yarn run prisma db seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@prisma/client": "5.8.0",
+    "@types/bcryptjs": "2.4.6",
+    "@types/jsonwebtoken": "9.0.5",
+    "@types/node": "20.11.1",
+    "cross-env": "7.0.3",
+    "prisma": "5.8.0",
+    "ts-node": "10.9.2",
+    "ts-node-dev": "2.0.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^10.0.2",
+    "@graphql-yoga/plugin-jwt": "^2.1.2",
+    "@graphql-yoga/plugin-response-cache": "^3.3.0",
+    "bcryptjs": "2.4.3",
+    "graphql": "^16.8.1",
+    "graphql-yoga": "5.1.1",
+    "jsonwebtoken": "9.0.2"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
+}
